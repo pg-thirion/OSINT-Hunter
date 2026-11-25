@@ -2,6 +2,10 @@
 
 A self-contained fictional open-source intelligence investigation game. Review simulated social profiles, archived websites, domain records, documents and illustrated photo exhibits, compare sources and submit evidence-backed conclusions.
 
+## Live demo
+
+**[Play OSINT Hunter on Vercel](https://osint-hunter.vercel.app/)**
+
 ## Play locally
 
 No installation, accounts, API keys or third-party services are required. Serve the repository using a static server:
@@ -42,7 +46,7 @@ npx playwright install --with-deps chromium firefox webkit
 node browser.test.cjs
 ```
 
-The suite covers all five investigations, searching, filters, pins, clue connections, escaped text, notes, reload persistence, export, hints, submission, resets, corrupted storage, console errors, external requests and responsive overflow at four viewport widths. The test server reproduces the GitHub Pages project subpath. Manual accessibility review and physical-device testing remain separate from the automated suite.
+The suite covers all eight investigations, searching, filters, pins, clue connections, escaped text, notes, reload persistence, export, hints, submission, resets, corrupted storage, console errors, external requests and responsive overflow at four viewport widths. The test server reproduces the GitHub Pages project subpath. Manual accessibility review and physical-device testing remain separate from the automated suite.
 
 ## Architecture and limitations
 
