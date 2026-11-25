@@ -39,7 +39,7 @@ async function suite(name){
    await page.locator('input[type=radio][data-question="'+i+'"][value="'+q[2]+'"]').check();
    for(const ref of q[3])await page.locator('input[data-question="'+i+'"][data-ref="'+ref+'"]').check();await page.locator('select[data-confidence="'+i+'"]').selectOption('High');
   }
-  await action('submit').click();await page.getByRole('heading',{name:'Case debrief'}).waitFor();
+  assert.match(await page.locator('#draft-progress').innerText(),/Objectives drafted: 3\/3/);await action('submit').click();await page.getByRole('heading',{name:'Case debrief'}).waitFor();
   assert.match(await page.locator('.result').innerText(),/300 \/ 300/);
   assert.equal(await page.locator('input[data-question]:not(:disabled)').count(),0);assert.equal(await page.locator('select[data-confidence="0"]').inputValue(),'High');
   await page.reload();await action('view','report').click();assert.match(await page.locator('.result').innerText(),/300 \/ 300/);
