@@ -18,7 +18,7 @@ async function suite(name){
  await page.goto(base);await page.getByRole('heading',{name:'Follow the evidence. Find the truth.'}).waitFor();
  assert.equal(await page.locator('.case').count(),5);
  await action('help').click();assert.equal(await page.locator('#help').isVisible(),true);await action('help').click();assert.equal(await page.locator('#help').isVisible(),false);
- await action('open','01').click();await page.getByRole('heading',{name:'The Vanishing Shipment'}).waitFor();
+ await action('open','01').first().click();await page.getByRole('heading',{name:'The Vanishing Shipment'}).waitFor();
  await page.locator('#search').fill('nonexistent');assert.equal(await page.locator('.evidence').count(),0);await page.locator('#search').clear();
  await page.locator('#filter').selectOption('Photo');assert.equal(await page.locator('.evidence').count(),1);await exhibit('E04');assert.equal(await page.locator('svg.photo').count(),1);
  await action('pin','E04').first().click();await page.locator('#filter').selectOption('Pinned');assert.equal(await page.locator('.evidence').count(),1);
@@ -50,7 +50,7 @@ async function suite(name){
   for(const view of ['evidence','board','timeline','report']){await action('view',view).click();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Overflow '+name+' '+width+' '+view);}
  }
  await page.goto(base+'#dashboard');await action('reset-all').click();assert.match(await page.locator('.metrics').innerText(),/0 \/ 5/);
- await page.evaluate(()=>localStorage.setItem('osint-hunter-v1',JSON.stringify({'01':{seen:[null,'INVALID','E01'],answers:[],links:[null],events:[{id:'E01',time:'bad'}],submitted:true},'02':[]})));await page.reload();assert.equal(await page.locator('.case').count(),5);await action('open','01').click();assert.equal(await page.locator('#notes').inputValue(),'');await action('view','report').click();assert.equal(await page.getByRole('heading',{name:'Investigation report'}).count(),1);
+ await page.evaluate(()=>localStorage.setItem('osint-hunter-v1',JSON.stringify({'01':{seen:[null,'INVALID','E01'],answers:[],links:[null],events:[{id:'E01',time:'bad'}],submitted:true},'02':[]})));await page.reload();assert.equal(await page.locator('.case').count(),5);await action('open','01').first().click();assert.equal(await page.locator('#notes').inputValue(),'');await action('view','report').click();assert.equal(await page.getByRole('heading',{name:'Investigation report'}).count(),1);
  await page.evaluate(()=>localStorage.setItem('osint-hunter-v1','invalid-json'));await page.reload();assert.equal(await page.locator('.evidence').count(),7);
  assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);
  await context.close();console.log(name+': all gameplay, persistence, responsive and security smoke checks passed');
