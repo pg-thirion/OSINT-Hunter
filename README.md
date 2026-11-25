@@ -10,7 +10,7 @@ No installation, accounts, API keys or third-party services are required. Serve 
 python3 -m http.server 8000
 ```
 
-Open http://localhost:8000. Alternatively deploy the root directory on GitHub Pages (Settings > Pages > Deploy from a branch > main > /root) or any static hosting provider.
+Open http://localhost:8000. GitHub Pages deployment is automated by the Test and publish OSINT Hunter workflow. In repository Settings > Pages, select GitHub Actions as the source if automatic enablement requires administrator approval. Every main-branch deployment must pass the test job first. Only the five production assets are published.
 
 ## Features
 
@@ -34,7 +34,15 @@ node --check app.js
 node --test cases.test.js
 ```
 
-Tests cover data integrity and scoring. For manual browser QA, open every case, search and filter, pin/unpin, add and remove connections, write notes and reload, reveal hints, submit a report, inspect the debrief, export notes and reset progress. Verify the same workflow at mobile widths.
+Unit tests cover data integrity, scoring and malformed inputs. To run the full browser suite locally (Node.js 22 and supported operating system):
+
+```sh
+npm install --no-save --no-package-lock playwright@1.56.1
+npx playwright install --with-deps chromium firefox webkit
+node browser.test.cjs
+```
+
+The suite covers all five investigations, searching, filters, pins, clue connections, escaped text, notes, reload persistence, export, hints, submission, resets, corrupted storage, console errors, external requests and responsive overflow at four viewport widths. The test server reproduces the GitHub Pages project subpath. Manual accessibility review and physical-device testing remain separate from the automated suite.
 
 ## Architecture and limitations
 
