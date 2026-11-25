@@ -10,11 +10,11 @@ No installation, accounts, API keys or third-party services are required. Serve 
 python3 -m http.server 8000
 ```
 
-Open http://localhost:8000. GitHub Pages deployment is automated by the Test and publish OSINT Hunter workflow. In repository Settings > Pages, select GitHub Actions as the source if automatic enablement requires administrator approval. Every main-branch deployment must pass the test job first. Only the five production assets are published.
+Open http://localhost:8000. Production is hosted at https://osint-hunter.vercel.app. Vercel runs unit tests before packaging the five production assets; GitHub Actions independently runs browser tests.
 
 ## Features
 
-- Five complete investigations, 36 exhibits and 15 objectives, with increasing difficulty.
+- Eight complete investigations, 54 exhibits and 24 objectives, with increasing difficulty.
 - Searchable evidence library, filters and pinned exhibits.
 - Evidence board with annotated exhibit relationships and review activity log.
 - Field notes, local autosave, case exports and case resets.
@@ -49,3 +49,7 @@ The suite covers all five investigations, searching, filters, pins, clue connect
 `cases.js` contains fictional data and the pure scoring functions. `app.js` handles the interface, routing and persistence. `index.html` and `style.css` provide the static shell and responsive design.
 
 Progress is stored in the browser's local storage. It is not synchronised across devices and can be cleared by browser settings. Answers are present in the client-side source code, so this game is intended for self-directed learning rather than secure competitive assessment. There is no live OSINT collection, external lookup, or investigation of real people. No data is sent to an external service by the game.
+
+## Expanded investigation tools
+
+Case search, difficulty/status filters, sorting, starred cases, daily briefing, achievements, statistics, large-text preference, JSON backup/restore, flags, unread/flagged filters, source reliability ratings, annotations, exhibit download, comparison, source matrix, hypothesis and chronology worksheets, checklist, note template, analysis export, confidence ratings, elapsed wall time, resume last exhibit, keyboard shortcuts and field guide. All data remains on the device unless the player exports it. The elapsed time is wall-clock time, not active play time.
