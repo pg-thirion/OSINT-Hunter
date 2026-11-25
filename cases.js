@@ -24,7 +24,7 @@ const CASES = [
         "Website",
         "Archived tracking page",
         "northquay.example · 10:20",
-        "M-204: route amended to Alder Warehouse. Amendment author: OPS-42."
+        "M-204: route amended to Alder Warehouse. Amendment author: OPS-42. Dock 7 arrival: not recorded; Alder arrival confirmed at 10:35."
       ],
       [
         "E04",
@@ -48,7 +48,7 @@ const CASES = [
         "Social",
         "Delivery announcement",
         "@northquay-status · 10:50",
-        "Shipment M-204 safely delivered to Dock 7 at 10:30! Photo attached is from last month's event."
+        "Shipment M-204 safely delivered to Dock 7 at 10:30! Our photograph shows the delivery. Archive comparison: the attached photo is from last month's event."
       ],
       [
         "E07",
@@ -542,12 +542,16 @@ const CASES = [
     ]
   }
 ];
-function score(caseData,answers,hints){
- const details=caseData.questions.map((q,i)=>{const a=answers[i]||{}, correct=a.choice===q[2], chosen=Array.isArray(a.refs)?a.refs:[], supported=q[3].every(id=>chosen.includes(id)), exact=supported&&chosen.length===q[3].length;return {correct,supported,points:correct?(exact?100:supported?80:40):0};});
- return {details,total:Math.max(0,details.reduce((s,d)=>s+d.points,0)-Math.min(3,hints.length)*15),max:caseData.questions.length*100};
+function score(caseData,answers={},hints=[]){
+ const details=caseData.questions.map((q,i)=>{const a=answers?.[i]||{},correct=a.choice===q[2],chosen=Array.isArray(a.refs)?[...new Set(a.refs)]:[],supported=q[3].every(id=>chosen.includes(id)),exact=supported&&chosen.length===q[3].length;return {correct,supported,points:correct?(exact?100:supported?80:40):0};});
+ const validHints=Array.isArray(hints)?new Set(hints.filter(i=>Number.isInteger(i)&&i>=0&&i<caseData.questions.length)).size:0;
+ return {details,total:Math.max(0,details.reduce((sum,d)=>sum+d.points,0)-validHints*15),max:caseData.questions.length*100};
 }
 function validate(data){
- const ids=new Set(); for(const c of data){if(ids.has(c.id)||!c.questions.length)throw Error("Invalid case");ids.add(c.id);const e=new Set(c.evidence.map(x=>x[0]));if(e.size!==c.evidence.length)throw Error("Duplicate evidence");for(const q of c.questions){if(!q[1][q[2]]||!q[3].length||q[3].some(x=>!e.has(x)))throw Error("Invalid answer reference");}}
+ if(!Array.isArray(data)||!data.length)throw Error("Missing cases");
+ const ids=new Set();for(const c of data){if(!c||! /^\d{2}$/.test(c.id)||ids.has(c.id)||typeof c.title!=="string"||typeof c.brief!=="string"||!Array.isArray(c.evidence)||!c.evidence.length||!Array.isArray(c.questions)||!c.questions.length)throw Error("Invalid case");ids.add(c.id);
+ const e=new Set();for(const item of c.evidence){if(!Array.isArray(item)||!/^E\d{2}$/.test(item[0])||e.has(item[0])||!["Social","Website","Photo","Domain","Document"].includes(item[1])||item.slice(2,5).length!==3||item.slice(2,5).some(x=>typeof x!=="string"))throw Error("Invalid evidence");e.add(item[0]);}
+ for(const q of c.questions){if(!Array.isArray(q)||typeof q[0]!=="string"||!Array.isArray(q[1])||q[1].length<2||q[1].some(x=>typeof x!=="string")||!Number.isInteger(q[2])||q[2]<0||q[2]>=q[1].length||!Array.isArray(q[3])||!q[3].length||new Set(q[3]).size!==q[3].length||q[3].some(x=>!e.has(x))||typeof q[4]!=="string"||typeof q[5]!=="string")throw Error("Invalid answer reference");}}
  return true;
 }
 if(typeof module !== 'undefined') module.exports={CASES,score,validate};
